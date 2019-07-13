@@ -1,5 +1,6 @@
 #include <memory>
 #include <vector>
+#include <iostream>
 
 const int ALPHABET_SIZE = 26;
 
