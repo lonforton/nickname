@@ -6,16 +6,16 @@
 #include <boost/test/output_test_stream.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include "radix_tree.h"
+#include "trie.h"
 
 struct TrieFixtureTest
 {
   TrieFixtureTest() 
   {
-    root = std::make_unique<TrieNode>();
-  }
+    
+  }  
 
-  std::unique_ptr<TrieNode> root;
+  Trie trie;
 };
 
 struct cout_redirect
@@ -41,8 +41,8 @@ BOOST_FIXTURE_TEST_CASE(nickname_input_test_1, TrieFixtureTest)
   boost::test_tools::output_test_stream output;
   {
     cout_redirect redirect(output.rdbuf());
-    insert(root.get(), std::string("aleksey"));
-    print_trie(root.get());    
+    trie.insert("aleksey");
+    trie.print();  
   }
   BOOST_CHECK(output.is_equal("aleksey$\n"));
 }
@@ -52,9 +52,9 @@ BOOST_FIXTURE_TEST_CASE(nickname_input_test_2, TrieFixtureTest)
   boost::test_tools::output_test_stream output;
   {
     cout_redirect redirect(output.rdbuf());
-    insert(root.get(), std::string("aleksey"));
-    insert(root.get(), std::string("sasha"));
-    print_trie(root.get());    
+    trie.insert("aleksey");
+    trie.insert("sasha");
+    trie.print();  
   }
 BOOST_CHECK(output.is_equal("\n\
 + aleksey$\n\
@@ -66,10 +66,10 @@ BOOST_FIXTURE_TEST_CASE(nickname_input_test_3, TrieFixtureTest)
   boost::test_tools::output_test_stream output;
   {
     cout_redirect redirect(output.rdbuf());
-    insert(root.get(), std::string("aleksey"));
-    insert(root.get(), std::string("sasha"));
-    insert(root.get(), std::string("aleks"));
-    print_trie(root.get());
+    trie.insert("aleksey");
+    trie.insert("sasha");
+    trie.insert("aleks");
+    trie.print();  
   }
 BOOST_CHECK(output.is_equal("\n\
 + aleks$\n\
@@ -83,11 +83,11 @@ BOOST_FIXTURE_TEST_CASE(nickname_input_test_4, TrieFixtureTest)
   boost::test_tools::output_test_stream output;
   {
     cout_redirect redirect(output.rdbuf());
-    insert(root.get(), std::string("aleksey"));
-    insert(root.get(), std::string("sasha"));
-    insert(root.get(), std::string("aleks"));
-    insert(root.get(), std::string("alek"));
-    print_trie(root.get());    
+    trie.insert("aleksey");
+    trie.insert("sasha");
+    trie.insert("aleks");
+    trie.insert("alek");
+    trie.print();  
   }
 BOOST_CHECK(output.is_equal("\n\
 + alek$\n\
@@ -101,12 +101,12 @@ BOOST_FIXTURE_TEST_CASE(nickname_input_test_5, TrieFixtureTest)
   boost::test_tools::output_test_stream output;
   {
     cout_redirect redirect(output.rdbuf());
-    insert(root.get(), std::string("aleksey"));
-    insert(root.get(), std::string("sasha"));
-    insert(root.get(), std::string("aleks"));
-    insert(root.get(), std::string("alek"));
-    insert(root.get(), std::string("alesha"));
-    print_trie(root.get());    
+    trie.insert("aleksey");
+    trie.insert("sasha");
+    trie.insert("aleks");
+    trie.insert("alek");
+    trie.insert("alesha");
+    trie.print();  
   }
 BOOST_CHECK(output.is_equal("\n\
 + ale\n\
@@ -122,13 +122,13 @@ BOOST_FIXTURE_TEST_CASE(nickname_input_test_6, TrieFixtureTest)
   boost::test_tools::output_test_stream output;
   {
     cout_redirect redirect(output.rdbuf());
-    insert(root.get(), std::string("aleksey"));
-    insert(root.get(), std::string("sasha"));
-    insert(root.get(), std::string("aleks"));
-    insert(root.get(), std::string("alek"));
-    insert(root.get(), std::string("alesha"));
-    insert(root.get(), std::string("maksim"));
-    print_trie(root.get());    
+    trie.insert("aleksey");
+    trie.insert("sasha");
+    trie.insert("aleks");
+    trie.insert("alek");
+    trie.insert("alesha");
+    trie.insert("maksim");
+    trie.print();   
   }
 BOOST_CHECK(output.is_equal("\n\
 + ale\n\
@@ -136,8 +136,8 @@ BOOST_CHECK(output.is_equal("\n\
 | | + s$\n\
 | |   + ey$\n\
 | + sha$\n\
-+ maksim$\n\
-+ sasha$\n"));
++ sasha$\n\
++ maksim$\n"));
 }
 
 BOOST_FIXTURE_TEST_CASE(nickname_input_test_repeat, TrieFixtureTest)
@@ -145,10 +145,10 @@ BOOST_FIXTURE_TEST_CASE(nickname_input_test_repeat, TrieFixtureTest)
   boost::test_tools::output_test_stream output;
   {
     cout_redirect redirect(output.rdbuf());
-    insert(root.get(), std::string("aleks"));
-    insert(root.get(), std::string("aleksey"));
-    insert(root.get(), std::string("aleks"));
-    print_trie(root.get());    
+    trie.insert("aleks");
+    trie.insert("aleksey");
+    trie.insert("aleks");
+    trie.print();     
   }
 BOOST_CHECK(output.is_equal("aleks$\n\
 + ey$\n"));
@@ -159,20 +159,20 @@ BOOST_FIXTURE_TEST_CASE(nickname_min_prefix_test_1, TrieFixtureTest)
   boost::test_tools::output_test_stream output;
   {
     cout_redirect redirect(output.rdbuf());
-    insert(root.get(), std::string("aleksey"));
-    insert(root.get(), std::string("sasha"));
-    insert(root.get(), std::string("aleks"));
-    insert(root.get(), std::string("alek"));
-    insert(root.get(), std::string("alesha"));
-    insert(root.get(), std::string("maksim"));
-    print_minimum_prefixes(root.get());    
+    trie.insert("aleksey");
+    trie.insert("sasha");
+    trie.insert("aleks");
+    trie.insert("alek");
+    trie.insert("alesha");
+    trie.insert("maksim");
+    trie.print_minimum_prefixes();  
   }
   BOOST_CHECK(output.is_equal("aleksey alekse\n\
 aleks aleks\n\
 alek alek\n\
 alesha ales\n\
-maksim m\n\
-sasha s\n"));
+sasha s\n\
+maksim m\n"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
