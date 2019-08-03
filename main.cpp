@@ -1,23 +1,21 @@
 #include <iostream>
 #include <memory>
 
-#include "radix_tree.h"
+#include "trie.h"
 
-int main() 
-{  
-  auto root = std::make_unique<TrieNode>();
+int main()
+{
+  Trie trie;
 
   std::string input_line;
   while (std::getline(std::cin, input_line))
   {
-    insert(root.get(), input_line);
-    print_trie(root.get());
+    trie.insert(input_line);
+    trie.print();
   }
 
-  print_trie(root.get());
+  trie.print();
+  trie.print_minimum_prefixes();
 
-  print_minimum_prefixes(root.get());
-  
-  return 0; 
-} 
-
+  return 0;
+}
