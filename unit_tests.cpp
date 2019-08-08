@@ -175,4 +175,44 @@ sasha s\n\
 maksim m\n"));
 }
 
+BOOST_FIXTURE_TEST_CASE(nickname_letters_test, TrieFixtureTest)
+{
+  boost::test_tools::output_test_stream output;
+  {
+    cout_redirect redirect(output.rdbuf());
+    trie.insert("abc");
+    trie.insert("aa");
+    trie.insert("b");
+    trie.print(); 
+    trie.print_minimum_prefixes();  
+  }
+  BOOST_CHECK(output.is_equal("\n\
++ b$\n\
+| + c$\n\
++ a$\n\
+bc bc\n\
+b b\n\
+a a\n"));
+}
+
+BOOST_FIXTURE_TEST_CASE(nickname_digits_test, TrieFixtureTest)
+{
+  boost::test_tools::output_test_stream output;
+  {
+    cout_redirect redirect(output.rdbuf());
+    trie.insert("123");
+    trie.insert("11");
+    trie.insert("2");
+    trie.print(); 
+    trie.print_minimum_prefixes();  
+  }
+    BOOST_CHECK(output.is_equal("\n\
++ 2$\n\
+| + 3$\n\
++ 1$\n\
+23 23\n\
+2 2\n\
+1 1\n"));
+}
+
 BOOST_AUTO_TEST_SUITE_END()
