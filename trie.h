@@ -41,7 +41,7 @@ std::unique_ptr<TrieNode> Trie::create_new_trie_node(const std::string& word)
   std::unique_ptr<TrieNode> new_node = std::make_unique<TrieNode>();
   new_node->label = word;
   new_node->is_end_of_word = true;
-  return std::move(new_node);
+  return new_node;
 }
 
 std::unique_ptr<TrieNode>& Trie::get_child_by_string(std::unique_ptr<TrieNode>& node, const std::string& word)
