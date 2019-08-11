@@ -87,17 +87,27 @@ void Trie::insert(const std::string &word, std::unique_ptr<TrieNode> &cur_node)
   std::string common_prefix(word.begin(), word_iterator);
   std::string word_suffix(word_iterator, word.end());
   std::string label_suffix(label_iterator, cur_node->label.end());
-  std::string current_label = cur_node->label;
+  std::string current_label = cur_node->label;  
 
-  std::vector<std::string> suffixes_vector {label_suffix, word_suffix};
-
+  if(common_prefix.empty() && !cur_node->label.empty())
+  {
+    std::unique_ptr<TrieNode> new_node = create_new_trie_node(cur_node->label);
+    new_node->is_end_of_word = cur_node->is_end_of_word;
+    cur_node->childs.swap(new_node->childs);    
+    cur_node->childs.push_back(std::move(new_node));    
+    label_suffix.clear();
+  }
   if (common_prefix != cur_node->label && common_prefix != word)
   {
-    cur_node->is_end_of_word = false;
+   cur_node->is_end_of_word = false;        
   }
-
+  if (word == cur_node->label)
+  {
+    cur_node->is_end_of_word = true; 
+  }
   cur_node->label = common_prefix;
 
+  std::vector<std::string> suffixes_vector {label_suffix, word_suffix};
   for(const auto &suffix : suffixes_vector)
   {
     if (!suffix.empty())
