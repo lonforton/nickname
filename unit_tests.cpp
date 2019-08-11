@@ -187,12 +187,13 @@ BOOST_FIXTURE_TEST_CASE(nickname_letters_test, TrieFixtureTest)
     trie.print_minimum_prefixes();  
   }
   BOOST_CHECK(output.is_equal("\n\
++ a\n\
+| + bc$\n\
+| + a$\n\
 + b$\n\
-| + c$\n\
-+ a$\n\
-bc bc\n\
-b b\n\
-a a\n"));
+abc ab\n\
+aa aa\n\
+b b\n"));
 }
 
 BOOST_FIXTURE_TEST_CASE(nickname_digits_test, TrieFixtureTest)
@@ -207,12 +208,13 @@ BOOST_FIXTURE_TEST_CASE(nickname_digits_test, TrieFixtureTest)
     trie.print_minimum_prefixes();  
   }
     BOOST_CHECK(output.is_equal("\n\
++ 1\n\
+| + 23$\n\
+| + 1$\n\
 + 2$\n\
-| + 3$\n\
-+ 1$\n\
-23 23\n\
-2 2\n\
-1 1\n"));
+123 12\n\
+11 11\n\
+2 2\n"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
